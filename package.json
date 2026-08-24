@@ -1,0 +1,79 @@
+{
+  "name": "add-to-copilot-chat",
+  "displayName": "Add to Copilot Chat",
+  "description": "Add files, folders, and selected code ranges to the current Copilot Chat input as path references.",
+  "version": "0.1.2",
+  "publisher": "vithrive",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": ["Other"],
+  "keywords": ["copilot", "chat", "reference", "path", "selection"],
+  "main": "./extension.js",
+  "extensionKind": ["ui"],
+  "activationEvents": [
+    "onCommand:addToCopilotChat.addEditorSelection",
+    "onCommand:addToCopilotChat.addExplorerResource",
+    "onCommand:addToCopilotChat.copyEditorSelection",
+    "onCommand:addToCopilotChat.copyExplorerResource"
+  ],
+  "contributes": {
+    "commands": [
+      { "command": "addToCopilotChat.addEditorSelection", "title": "Add to Copilot Chat" },
+      { "command": "addToCopilotChat.addExplorerResource", "title": "Add to Copilot Chat" },
+      { "command": "addToCopilotChat.copyEditorSelection", "title": "Copy Copilot Reference" },
+      { "command": "addToCopilotChat.copyExplorerResource", "title": "Copy Copilot Reference" }
+    ],
+    "menus": {
+      "editor/context": [
+        { "command": "addToCopilotChat.addEditorSelection", "when": "editorTextFocus && editorHasSelection", "group": "navigation@20" },
+        { "command": "addToCopilotChat.copyEditorSelection", "when": "editorTextFocus && editorHasSelection", "group": "navigation@21" }
+      ],
+      "explorer/context": [
+        { "command": "addToCopilotChat.addExplorerResource", "group": "navigation@20" },
+        { "command": "addToCopilotChat.copyExplorerResource", "group": "navigation@21" }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "addToCopilotChat.addEditorSelection",
+        "key": "ctrl+alt+shift+a",
+        "mac": "cmd+ctrl+shift+a",
+        "when": "editorTextFocus && editorHasSelection"
+      }
+    ],
+    "configuration": {
+      "title": "Add to Copilot Chat",
+      "properties": {
+        "addToCopilotChat.pathStyle": {
+          "type": "string",
+          "enum": ["absolute", "workspaceRelative"],
+          "enumDescriptions": [
+            "Use the absolute path, matching dsh-drop-caret's file reference form.",
+            "Use a workspace-relative path when possible; external resources still use absolute paths."
+          ],
+          "default": "absolute",
+          "description": "Path format for generated references."
+        },
+        "addToCopilotChat.autoPaste": {
+          "type": "boolean",
+          "default": true,
+          "description": "Attempt to focus Copilot Chat and paste the reference at its retained cursor position. If this fails, the reference remains on the clipboard for manual paste."
+        },
+        "addToCopilotChat.focusDelayMs": {
+          "type": "number",
+          "default": 200,
+          "minimum": 0,
+          "maximum": 2000,
+          "description": "Milliseconds to wait after focusing Copilot Chat before dispatching paste."
+        },
+        "addToCopilotChat.restoreClipboard": {
+          "type": "boolean",
+          "default": true,
+          "description": "Restore the previous clipboard text after a successful automatic paste. The generated reference is kept on the clipboard when automatic paste fails."
+        }
+      }
+    }
+  }
+}
